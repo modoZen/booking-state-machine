@@ -1,13 +1,12 @@
-import { BaseLayout } from './components/BaseLayout'
-import './App.css'
+import { BaseLayout } from './containers/BaseLayout';
+import './App.css';
 
 function App() {
-  
-  return (
-    <>
-      <BaseLayout />
-    </>
-  )
+	return (
+		<div className='App'>
+			<BaseLayout />
+		</div>
+	);
 }
 
-export default App
+export default App;
