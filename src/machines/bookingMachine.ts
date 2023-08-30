@@ -39,39 +39,53 @@ export interface Props {
 	context?: BookingContext;
 }
 
-const bookingMachine = createMachine({
-	id: 'buy plane tickets',
-	initial: 'initial',
-	schema: {
-		events: {} as BookingEvent,
-		context: {} as BookingContext,
+const bookingMachine = createMachine(
+	{
+		id: 'buy plane tickets',
+		initial: 'initial',
+		schema: {
+			events: {} as BookingEvent,
+			context: {} as BookingContext,
+		},
+		tsTypes: {} as import('./bookingMachine.typegen').Typegen0,
+		states: {
+			initial: {
+				on: {
+					START: {
+						target: 'search',
+						actions: 'imprimirInicio',
+					},
+				},
+			},
+			search: {
+				entry: 'imprimirEntrada',
+				exit: 'imprimirSalida',
+				on: {
+					CONTINUE: 'passengers',
+					CANCEL: 'initial',
+				},
+			},
+			passengers: {
+				on: {
+					DONE: 'tickets',
+					CANCEL: 'initial',
+				},
+			},
+			tickets: {
+				on: {
+					FINISH: 'initial',
+				},
+			},
+		},
+		predictableActionArguments: true,
 	},
-	tsTypes: {} as import('./bookingMachine.typegen').Typegen0,
-	states: {
-		initial: {
-			on: {
-				START: 'search',
-			},
-		},
-		search: {
-			on: {
-				CONTINUE: 'passengers',
-				CANCEL: 'initial',
-			},
-		},
-		passengers: {
-			on: {
-				DONE: 'tickets',
-				CANCEL: 'initial',
-			},
-		},
-		tickets: {
-			on: {
-				FINISH: 'initial',
-			},
+	{
+		actions: {
+			imprimirInicio: () => console.log('Imprimir Inicio'),
+			imprimirEntrada: () => console.log('Imprimir Entrada'),
+			imprimirSalida: () => console.log('Imprimir Salida'),
 		},
 	},
-	predictableActionArguments: true,
-});
+);
 
 export { bookingMachine };
