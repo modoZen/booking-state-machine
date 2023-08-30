@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, ChangeEvent, FormEvent } from 'react';
 import { Props } from '../machines/bookingMachine';
 import './Passengers.css';
 
@@ -9,12 +9,16 @@ export const Passengers: FC<Props> = ({ state, send }) => {
 		send?.('DONE');
 	};
 
-	const onChangeInput = e => {
+	const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
 		changeValue(e.target.value);
 	};
 
-	const submit = e => {
+	const submit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		send?.({
+			type: 'ADD',
+			newPassenger: value,
+		});
 		changeValue('');
 	};
 
@@ -23,6 +27,11 @@ export const Passengers: FC<Props> = ({ state, send }) => {
 			<p className='Passengers-title title'>
 				Agrega a las personas que van a volar ✈️
 			</p>
+			{state?.context.passengers.map(passenger => (
+				<p className='text' key={passenger}>
+					{passenger}
+				</p>
+			))}
 			<input
 				id='name'
 				name='name'

@@ -4,7 +4,6 @@ export interface Typegen0 {
 	'@@xstate/typegen': true;
 	internalEvents: {
 		'xstate.init': { type: 'xstate.init' };
-		'xstate.stop': { type: 'xstate.stop' };
 	};
 	invokeSrcNameMap: {};
 	missingImplementations: {
@@ -14,9 +13,7 @@ export interface Typegen0 {
 		services: never;
 	};
 	eventsCausingActions: {
-		imprimirEntrada: 'START';
-		imprimirInicio: 'START';
-		imprimirSalida: 'CANCEL' | 'CONTINUE' | 'xstate.stop';
+		clearState: 'CANCEL';
 	};
 	eventsCausingDelays: {};
 	eventsCausingGuards: {};

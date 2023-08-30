@@ -2,7 +2,7 @@ import { FC, ChangeEvent, useState } from 'react';
 import { Props } from '../machines/bookingMachine';
 import './Search.css';
 
-export const Search: FC<Props> = ({ send, context }) => {
+export const Search: FC<Props> = ({ send }) => {
 	const [flight, setFlight] = useState('');
 
 	const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -10,7 +10,7 @@ export const Search: FC<Props> = ({ send, context }) => {
 	};
 
 	const goToPassengers = () => {
-		send?.('CONTINUE');
+		send?.({ type: 'CONTINUE', selectedCountry: flight });
 	};
 
 	const options = ['Perú', 'Mexico', 'Venezuela', 'Colombia'];
@@ -24,7 +24,7 @@ export const Search: FC<Props> = ({ send, context }) => {
 				value={flight}
 				onChange={handleSelectChange}
 			>
-				<option value='' disabled defaultValue>
+				<option value='' disabled>
 					Escoge un país
 				</option>
 				{options.map(option => (

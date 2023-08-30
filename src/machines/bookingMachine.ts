@@ -8,15 +8,20 @@ import {
 	ServiceMap,
 	SingleOrArray,
 	State,
+	assign,
 	createMachine,
 } from 'xstate';
 import { Typegen0 } from './bookingMachine.typegen';
 
-export interface BookingContext {}
+export interface BookingContext {
+	passengers: string[];
+	selectedCountry: string;
+}
 
 export type BookingEvent =
 	| { type: 'START' }
-	| { type: 'CONTINUE' }
+	| { type: 'CONTINUE'; selectedCountry: string }
+	| { type: 'ADD'; newPassenger: string }
 	| { type: 'DONE' }
 	| { type: 'FINISH' }
 	| { type: 'CANCEL' };
@@ -48,27 +53,41 @@ const bookingMachine = createMachine(
 			context: {} as BookingContext,
 		},
 		tsTypes: {} as import('./bookingMachine.typegen').Typegen0,
+		context: {
+			passengers: [],
+			selectedCountry: '',
+		},
 		states: {
 			initial: {
 				on: {
 					START: {
 						target: 'search',
-						actions: 'imprimirInicio',
 					},
 				},
 			},
 			search: {
-				entry: 'imprimirEntrada',
-				exit: 'imprimirSalida',
 				on: {
-					CONTINUE: 'passengers',
+					CONTINUE: {
+						target: 'passengers',
+						actions: assign({
+							selectedCountry: (_context, event) => event.selectedCountry,
+						}),
+					},
 					CANCEL: 'initial',
 				},
 			},
 			passengers: {
 				on: {
 					DONE: 'tickets',
-					CANCEL: 'initial',
+					CANCEL: {
+						target: 'initial',
+						actions: 'clearState',
+					},
+					ADD: {
+						target: 'passengers',
+						actions: (context, event) =>
+							context.passengers.push(event.newPassenger),
+					},
 				},
 			},
 			tickets: {
@@ -81,9 +100,16 @@ const bookingMachine = createMachine(
 	},
 	{
 		actions: {
-			imprimirInicio: () => console.log('Imprimir Inicio'),
-			imprimirEntrada: () => console.log('Imprimir Entrada'),
-			imprimirSalida: () => console.log('Imprimir Salida'),
+			clearState: assign({
+				passengers: [],
+				selectedCountry: '',
+			}),
+			// addPassenger: assign({
+			// 	passengers: (context, event) => [
+			// 		...context.passengers,
+			// 		event.newPassenger,
+			// 	],
+			// }),
 		},
 	},
 );
