@@ -12,10 +12,13 @@ import {
 	createMachine,
 } from 'xstate';
 import { Typegen0 } from './bookingMachine.typegen';
+import { fetchCountries } from '../utils/api';
 
 export interface BookingContext {
 	passengers: string[];
 	selectedCountry: string;
+	countries: any[];
+	error: string;
 }
 
 export type BookingEvent =
@@ -24,6 +27,7 @@ export type BookingEvent =
 	| { type: 'ADD'; newPassenger: string }
 	| { type: 'DONE' }
 	| { type: 'FINISH' }
+	| { type: 'RETRY' }
 	| { type: 'CANCEL' };
 
 export interface Props {
@@ -49,6 +53,8 @@ const bookingMachine = createMachine(
 		context: {
 			passengers: [],
 			selectedCountry: '',
+			countries: [],
+			error: '',
 		},
 		tsTypes: {} as import('./bookingMachine.typegen').Typegen0,
 		schema: {
@@ -73,7 +79,37 @@ const bookingMachine = createMachine(
 							selectedCountry: (_context, event) => event.selectedCountry,
 						}),
 					},
-					CANCEL: 'initial',
+					CANCEL: {
+						target: 'initial',
+						actions: 'clearState',
+					},
+				},
+				initial: 'loading',
+				states: {
+					loading: {
+						invoke: {
+							id: 'getContries',
+							src: () => fetchCountries,
+							onDone: {
+								target: 'success',
+								actions: assign({
+									countries: (_context, event) => event.data,
+								}),
+							},
+							onError: {
+								target: 'failure',
+								actions: assign({
+									error: 'Fallo el request',
+								}),
+							},
+						},
+					},
+					success: {},
+					failure: {
+						on: {
+							RETRY: 'loading',
+						},
+					},
 				},
 			},
 			passengers: {
@@ -91,8 +127,17 @@ const bookingMachine = createMachine(
 				},
 			},
 			tickets: {
+				after: {
+					5000: {
+						target: 'initial',
+						actions: 'clearState',
+					},
+				},
 				on: {
-					FINISH: 'initial',
+					FINISH: {
+						target: 'initial',
+						actions: 'clearState',
+					},
 				},
 			},
 		},

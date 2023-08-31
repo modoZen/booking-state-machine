@@ -2,10 +2,12 @@ import { FC } from 'react';
 import { Props } from '../machines/bookingMachine';
 import './Tickets.css';
 
-export const Tickets: FC<Props> = ({ send, context }) => {
+export const Tickets: FC<Props> = ({ send, state }) => {
 	const finish = () => {
 		send?.('FINISH');
 	};
+
+	const { context } = state!;
 
 	return (
 		<div className='Tickets'>
@@ -13,7 +15,7 @@ export const Tickets: FC<Props> = ({ send, context }) => {
 				Gracias por volar con book a fly 💚
 			</p>
 			<div className='Tickets-ticket'>
-				<div className='Tickets-country'>Colombia</div>
+				<div className='Tickets-country'>{context.selectedCountry}</div>
 				<div className='Tickets-passengers'>
 					<span>✈</span>
 				</div>

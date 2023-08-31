@@ -3,6 +3,9 @@
 export interface Typegen0 {
 	'@@xstate/typegen': true;
 	internalEvents: {
+		'xstate.after(5000)#buy plane tickets.tickets': {
+			type: 'xstate.after(5000)#buy plane tickets.tickets';
+		};
 		'xstate.init': { type: 'xstate.init' };
 	};
 	invokeSrcNameMap: {};
@@ -13,11 +16,24 @@ export interface Typegen0 {
 		services: never;
 	};
 	eventsCausingActions: {
-		clearState: 'CANCEL';
+		clearState:
+			| 'CANCEL'
+			| 'FINISH'
+			| 'xstate.after(5000)#buy plane tickets.tickets';
 	};
 	eventsCausingDelays: {};
 	eventsCausingGuards: {};
-	eventsCausingServices: {};
-	matchesStates: 'initial' | 'passengers' | 'search' | 'tickets';
+	eventsCausingServices: {
+		getContries: 'RETRY' | 'START';
+	};
+	matchesStates:
+		| 'initial'
+		| 'passengers'
+		| 'search'
+		| 'search.failure'
+		| 'search.loading'
+		| 'search.success'
+		| 'tickets'
+		| { search?: 'failure' | 'loading' | 'success' };
 	tags: never;
 }
