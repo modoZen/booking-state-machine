@@ -18,6 +18,9 @@ export const Tickets: FC<Props> = ({ send, state }) => {
 				<div className='Tickets-country'>{context.selectedCountry}</div>
 				<div className='Tickets-passengers'>
 					<span>✈</span>
+					{context.passengers.map(passenger => (
+						<p key={passenger}>{passenger}</p>
+					))}
 				</div>
 			</div>
 			<button onClick={finish} className='Tickets-finalizar button'>

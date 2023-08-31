@@ -114,15 +114,22 @@ const bookingMachine = createMachine(
 			},
 			passengers: {
 				on: {
-					DONE: 'tickets',
+					DONE: {
+						target: 'tickets',
+						cond: 'moreThanOnePassanger',
+					},
 					CANCEL: {
 						target: 'initial',
 						actions: 'clearState',
 					},
 					ADD: {
 						target: 'passengers',
-						actions: (context, event) =>
-							context.passengers.push(event.newPassenger),
+						actions: assign({
+							passengers: (context, event) => [
+								...context.passengers,
+								event.newPassenger,
+							],
+						}),
 					},
 				},
 			},
@@ -148,6 +155,8 @@ const bookingMachine = createMachine(
 			clearState: assign({
 				passengers: [],
 				selectedCountry: '',
+				countries: [],
+				error: '',
 			}),
 			// addPassenger: assign({
 			// 	passengers: (context, event) => [
@@ -155,6 +164,9 @@ const bookingMachine = createMachine(
 			// 		event.newPassenger,
 			// 	],
 			// }),
+		},
+		guards: {
+			moreThanOnePassanger: context => context.passengers.length !== 0,
 		},
 	},
 );

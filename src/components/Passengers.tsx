@@ -40,6 +40,8 @@ export const Passengers: FC<Props> = ({ state, send }) => {
 				required
 				value={value}
 				onChange={onChangeInput}
+				autoFocus
+				pattern='^[a-zA-Z]+(?:\s[a-zA-Z]+)*$'
 			/>
 			<div className='Passengers-buttons'>
 				<button className='Passengers-add button-secondary' type='submit'>
