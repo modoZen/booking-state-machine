@@ -11,7 +11,7 @@ import {
 	assign,
 	createMachine,
 } from 'xstate';
-import { Typegen0 } from './bookingMachine.typegen';
+import { Typegen0 } from './ejemploJerarquia.typegen';
 
 export interface BookingContext {
 	passengers: string[];
@@ -24,7 +24,9 @@ export type BookingEvent =
 	| { type: 'ADD'; newPassenger: string }
 	| { type: 'DONE' }
 	| { type: 'FINISH' }
-	| { type: 'CANCEL' };
+	| { type: 'CANCEL' }
+	| { type: 'ERROR' }
+	| { type: 'RETRY' };
 
 export interface Props {
 	state?: State<
@@ -44,13 +46,31 @@ export interface Props {
 	context?: BookingContext;
 }
 
+const fillContries = {
+	initial: 'loading',
+	states: {
+		loading: {
+			on: {
+				DONE: 'success',
+				ERROR: 'failure',
+			},
+		},
+		success: {},
+		failure: {
+			on: {
+				RETRY: 'loading',
+			},
+		},
+	},
+};
+
 const bookingMachine = createMachine(
 	{
 		context: {
 			passengers: [],
 			selectedCountry: '',
 		},
-		tsTypes: {} as import('./bookingMachine.typegen').Typegen0,
+		tsTypes: {} as import('./ejemploJerarquia.typegen').Typegen0,
 		schema: {
 			events: {} as BookingEvent,
 			context: {} as BookingContext,
@@ -75,6 +95,7 @@ const bookingMachine = createMachine(
 					},
 					CANCEL: 'initial',
 				},
+				...fillContries,
 			},
 			passengers: {
 				on: {
