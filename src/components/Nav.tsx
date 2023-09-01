@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Props } from '../machines/bookingMachine';
+import { Props } from '../types/BookingMachine';
 import './Nav.css';
 
 export const Nav: FC<Props> = ({ state, send }) => {

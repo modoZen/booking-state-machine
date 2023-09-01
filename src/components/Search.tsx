@@ -1,5 +1,5 @@
 import { FC, ChangeEvent, useState } from 'react';
-import { Props } from '../machines/bookingMachine';
+import { Props } from '../types/BookingMachine';
 import './Search.css';
 
 export const Search: FC<Props> = ({ state, send }) => {

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Props } from '../machines/bookingMachine';
+import { Props } from '../types/BookingMachine';
 import './Welcome.css';
 
 export const Welcome: FC<Props> = ({ send }) => {

@@ -1,52 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-	BaseActionObject,
-	Event,
-	EventData,
-	ResolveTypegenMeta,
-	SCXML,
-	ServiceMap,
-	SingleOrArray,
-	State,
-	assign,
-	createMachine,
-} from 'xstate';
-import { Typegen0 } from './bookingMachine.typegen';
+import { assign, createMachine } from 'xstate';
 import { fetchCountries } from '../utils/api';
-
-export interface BookingContext {
-	passengers: string[];
-	selectedCountry: string;
-	countries: any[];
-	error: string;
-}
-
-export type BookingEvent =
-	| { type: 'START' }
-	| { type: 'CONTINUE'; selectedCountry: string }
-	| { type: 'ADD'; newPassenger: string }
-	| { type: 'DONE' }
-	| { type: 'FINISH' }
-	| { type: 'RETRY' }
-	| { type: 'CANCEL' };
-
-export interface Props {
-	state?: State<
-		BookingContext,
-		BookingEvent,
-		any,
-		{
-			value: any;
-			context: BookingContext;
-		},
-		ResolveTypegenMeta<Typegen0, BookingEvent, BaseActionObject, ServiceMap>
-	>;
-	send?: (
-		event: SCXML.Event<BookingEvent> | SingleOrArray<Event<BookingEvent>>,
-		payload?: EventData | undefined,
-	) => Props['state'];
-	context?: BookingContext;
-}
+import { BookingContext, BookingEvent } from '../types/BookingMachine';
 
 const bookingMachine = createMachine(
 	{
@@ -158,12 +112,6 @@ const bookingMachine = createMachine(
 				countries: [],
 				error: '',
 			}),
-			// addPassenger: assign({
-			// 	passengers: (context, event) => [
-			// 		...context.passengers,
-			// 		event.newPassenger,
-			// 	],
-			// }),
 		},
 		guards: {
 			moreThanOnePassanger: context => context.passengers.length !== 0,

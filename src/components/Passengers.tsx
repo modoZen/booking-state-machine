@@ -1,5 +1,5 @@
 import { FC, useState, ChangeEvent, FormEvent } from 'react';
-import { Props } from '../machines/bookingMachine';
+import { Props } from '../types/BookingMachine';
 import './Passengers.css';
 
 export const Passengers: FC<Props> = ({ state, send }) => {

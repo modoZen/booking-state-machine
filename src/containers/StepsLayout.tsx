@@ -3,7 +3,7 @@ import { Welcome } from '../components/Welcome';
 import { Search } from '../components/Search';
 import { Passengers } from '../components/Passengers';
 import { Tickets } from '../components/Tickets';
-import { Props } from '../machines/bookingMachine';
+import { Props } from '../types/BookingMachine';
 import './StepsLayout.css';
 
 export const StepsLayout: FC<Props> = ({ state, send }) => {
